@@ -115,7 +115,7 @@ class Crawler {
                 await this.enforceRateLimit(pOrigin);
 
                 // fetch url
-                const options = { headers: { 'User-Agent': CONFIG.crawler.crawlerName } };
+                const options = { headers: { 'Api-User-Agent': CONFIG.crawler.crawlerName } };
                 const response = await fetch(url, options);
 
                 if (!response.ok) {
@@ -199,7 +199,7 @@ class Crawler {
                 console.log(`Crawling '${url}'`);
 
                 // fetch url
-                const options = { headers: { 'User-Agent': CONFIG.crawler.crawlerName } };
+                const options = { headers: { 'Api-User-Agent': CONFIG.crawler.crawlerName } };
                 const response = await fetch(url, options);
 
                 // discard if status code is not valid

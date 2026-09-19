@@ -28,7 +28,7 @@ async function exportData() {
             await new Promise(resolve => setTimeout(resolve, CONFIG.crawler.rateLimitMs));
 
             // fetch url
-            const options = { headers: { 'User-Agent': CONFIG.crawler.crawlerName } };
+            const options = { headers: { 'Api-User-Agent': CONFIG.crawler.crawlerName } };
             const response = await fetch(row.url, options);
 
             if (!response.ok) {
