@@ -1,6 +1,8 @@
 
 console.clear();
 
+const events = require('events');
+
 const db = require('./scripts/database');
 const Crawler = require('./scripts/crawler');
 const CONFIG = require('./config');
@@ -8,6 +10,11 @@ const CONFIG = require('./config');
 
 
 //#region SETUP
+
+
+// scale listener threshold dynamically with amount of crawlers
+events.defaultMaxListeners = Math.max(20, CONFIG.execution.concurrentCrawlers * 3);
+
 
 process.on('SIGINT', () => {
     console.log('\nShutting down...');

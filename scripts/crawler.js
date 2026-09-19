@@ -190,6 +190,8 @@ class Crawler {
             // mark as visited
             db.addVisitedUrl(url);
 
+            let response;
+
             try {
 
                 // rate limit
@@ -200,7 +202,7 @@ class Crawler {
 
                 // fetch url
                 const options = { headers: { 'Api-User-Agent': CONFIG.crawler.crawlerName } };
-                const response = await fetch(url, options);
+                response = await fetch(url, options);
 
                 // discard if status code is not valid
                 if (!response.ok) {
@@ -214,8 +216,19 @@ class Crawler {
                     db.addVisitedUrl(finalUrl);
                 }
 
+                // read or cancel body before checking well-known routes
+                const contentType = response.headers.get('content-type') || '';
+                const isHtml = contentType.includes('text/html');
+
+                let html = '';
+                if (isHtml) {
+                    html = await response.text();
+                } else {
+                    await response.body?.cancel();
+                }
+
                 
-                // check well-known agent endpoints once per origin
+                // check well-known endpoints once per origin
                 try {
                     const finalOrigin = new URL(finalUrl).origin;
                     if (!checkedOrigins.has(finalOrigin)) {
@@ -227,13 +240,9 @@ class Crawler {
                 }
 
 
-                if (!response.headers.get('content-type')?.includes('text/html')) {
-                    await response.body?.cancel();
-                    continue;
-                }
+                if (!isHtml) continue;
                 
-                const html = await response.text();
-                
+
                 // enforce language check
                 if (!this.checkLanguage(html)) continue;
                 
@@ -247,6 +256,9 @@ class Crawler {
                 }
             } catch (error) {
                 // ignore failed requests
+                if (response?.body && !response.bodyUsed) {
+                    await response.body.cancel().catch(() => { });
+                }
             }
         }
     }
