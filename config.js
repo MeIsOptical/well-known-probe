@@ -3,7 +3,7 @@
 const CONFIG = {
 
     execution: {
-        concurrentCrawlers: 5,
+        concurrentCrawlers: 10,
         seeds: [
             'https://news.ycombinator.com/',
             'https://developer.mozilla.org/en-US/',
