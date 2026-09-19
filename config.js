@@ -14,7 +14,7 @@ const CONFIG = {
     crawler: {
         crawlerName: 'Well-Known-Probe/1.0',
         allowedLanguages: ['en'],
-        rateLimitMs: 1500,
+        rateLimitMs: 800,
         wellKnownEndpoints: [
             '/.well-known/llms.txt',
             '/.well-known/agent-manifest.json',
