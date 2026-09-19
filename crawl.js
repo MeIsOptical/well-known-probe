@@ -22,6 +22,18 @@ process.on('SIGINT', () => {
     process.exit(0);
 });
 
+process.on('uncaughtException', (err) => {
+    // ignore undici socket disconnect assertion bugs
+    if (err.code === 'ERR_ASSERTION' && err.message?.includes('!this.paused')) {
+        console.warn('Recovered from abrupt socket closure assertion.');
+        return;
+    }
+
+    console.error('Fatal unhandled error:', err);
+    db.close();
+    process.exit(1);
+});
+
 //#endregion
 
 
