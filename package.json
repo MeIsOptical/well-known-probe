@@ -1,9 +1,25 @@
 {
-  "name": "DOM-2-Weights",
+  "name": "well-known-probe",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Search engine for AI agent manifests and endpoints.",
+  "main": "npm.js",
+  "files": [
+    "npm.js"
+  ],
+  "keywords": [
+    "agent-manifests",
+    "agent-skills",
+    "ai-agents",
+    "crawler",
+    "dataset",
+    "llm-txt",
+    "well-known"
+  ],
+  "author": "Optical Labs",
+  "license": "MIT",
   "type": "commonjs",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "better-sqlite3": "^13.0.3",
     "cheerio": "^1.2.0"
   }
