@@ -1,0 +1,10 @@
+{
+  "name": "DOM-2-Weights",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "commonjs",
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "cheerio": "^1.2.0"
+  }
+}

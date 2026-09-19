@@ -1,0 +1,34 @@
+[
+    {
+        "url": "https://www.lambgoat.com/.well-known/agent-skills/index.json",
+        "domain": "www.lambgoat.com",
+        "endpoint": "/.well-known/agent-skills/index.json",
+        "filename": "index.json",
+        "content": {
+            "$schema": "https://agentskills.io/schema/v0.2.0/index.json",
+            "skills": [
+                {
+                    "name": "find-upcoming-shows",
+                    "type": "markdown",
+                    "description": "Find upcoming hardcore/metal shows by location and date range.",
+                    "url": "https://lambgoat.com/.well-known/agent-skills/find-upcoming-shows/SKILL.md",
+                    "sha256": "7edec38ef8759d0ec686f24895726691ad2db1ca94c3e929fc02ad103d7573cb"
+                },
+                {
+                    "name": "comment-moderation",
+                    "type": "markdown",
+                    "description": "Moderate user comments (review, edit, soft-delete, restore) via the /api/admin admin API.",
+                    "url": "https://lambgoat.com/.well-known/agent-skills/comment-moderation/SKILL.md",
+                    "sha256": "fe4510ef0bddc9cb6fd8606b449a0a1235a23fa87c8e2c48c9a5e9670c90348a"
+                }
+            ]
+        }
+    },
+    {
+        "url": "https://megalodon.jp/.well-known/llms.txt",
+        "domain": "megalodon.jp",
+        "endpoint": "/.well-known/llms.txt",
+        "filename": "llms.txt",
+        "content": "Hello."
+    }
+]

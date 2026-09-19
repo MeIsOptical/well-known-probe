@@ -1,0 +1,7 @@
+# Database
+urls.db
+urls.db-shm
+urls.db-wal
+
+# Dependencies
+node_modules/
