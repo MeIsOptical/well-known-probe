@@ -10,6 +10,7 @@ const CONFIG = {
             'https://vercel.com/',
             'https://lobste.rs/',
             'https://github.com/trending',
+            'https://www.answer.ai/',
             'https://ollama.com/',
             'https://huggingface.co/',
             'https://js.langchain.com/',
@@ -17,7 +18,8 @@ const CONFIG = {
             'https://developer.mozilla.org/en-US/',
             'https://simonwillison.net/',
             'https://dev.to/',
-            'https://hashnode.com/'
+            'https://hashnode.com/',
+            'https://eugeneyan.com/'
         ]
     },
 
