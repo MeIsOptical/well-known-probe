@@ -96,27 +96,36 @@ class Crawler {
 
 
 
-    // extract any well-known urls from text or json content
-    extractWellKnownUrls(pText, pBaseUrl) {
+    // extract all urls from text or json content
+    extractPayloadUrls(pContent, pBaseUrl) {
         const found = new Set();
 
-        // absolute urls
-        const absoluteMatches = pText.match(/https?:\/\/[^\s"'<>\)\],}]+/g) || [];
+        // absolute paths
+        const absoluteMatches = pContent.match(/https?:\/\/[^\s"'`<>\)\],}]+/g) || [];
         for (const url of absoluteMatches) {
-            if (url.includes('/.well-known/')) {
-                try {
-                    const parsed = new URL(url);
-                    parsed.hash = '';
-                    found.add(parsed.href);
-                } catch { }
-            }
+            try {
+                const parsed = new URL(url);
+                parsed.hash = '';
+                found.add(parsed.href);
+            } catch { }
+        }
+
+        // relative markdown paths
+        const markdownMatches = pContent.matchAll(/\[.*?\]\((?!https?:\/\/)(\/[^\s\)]+)\)/g);
+        for (const match of markdownMatches) {
+            try {
+                const resolved = new URL(match[1], pBaseUrl);
+                resolved.hash = '';
+                found.add(resolved.href);
+            } catch { }
         }
 
         // relative paths
-        const relativeMatches = pText.match(/\/\.well-known\/[^\s"'<>\)\],}]+/g) || [];
-        for (const relPath of relativeMatches) {
+        const stringMatches = pContent.matchAll(/(['"`])(\/[^\s'"`]+)\1/g);
+        for (const match of stringMatches) {
             try {
-                const resolved = new URL(relPath, pBaseUrl);
+                // match[1] is the quote character, match[2] is the actual path
+                const resolved = new URL(match[2], pBaseUrl);
                 resolved.hash = '';
                 found.add(resolved.href);
             } catch { }
@@ -134,78 +143,101 @@ class Crawler {
 
 
 
+    // probe and validate a specific well-known endpoint
+    async probeEndpoint(pUrl, pOrigin) {
+
+        // check if already visited
+        if (db.isUrlVisited(pUrl)) return;
+        db.addVisitedUrl(pUrl);
+
+        let response;
+
+        try {
+            // rate limits
+            await this.enforceRateLimit(pOrigin);
+
+            // fetch url
+            const options = {
+                headers: { 'User-Agent': CONFIG.crawler.crawlerName },
+                signal: AbortSignal.timeout(10000)
+            };
+            response = await fetch(pUrl, options);
+
+            if (!response.ok) {
+                await response.body?.cancel();
+                return;
+            }
+
+            // check if redirected away from a .well-known path
+            const finalUrlObj = new URL(response.url);
+            if (!finalUrlObj.pathname.includes('/.well-known/')) {
+                await response.body?.cancel();
+                return;
+            }
+
+            // reject html responses (soft 404s or spa fallbacks)
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('text/html')) {
+                await response.body?.cancel();
+                return;
+            }
+
+            const text = await response.text();
+            if (!text.trim()) return;
+
+            if (finalUrlObj.pathname.endsWith('.txt') && text.trim().startsWith('<')) {
+                return;
+            }
+
+
+            // validate json structure
+            if (finalUrlObj.pathname.endsWith('.json')) {
+                try {
+                    const parsed = JSON.parse(text);
+                    if (typeof parsed !== 'object' || parsed === null) return;
+                } catch {
+                    return;
+                }
+            }
+
+
+            console.log(`Found well-known endpoint: ${pUrl}`);
+            db.addWellKnownUrl(pUrl);
+
+
+            // discover and route nested urls inside the payload
+            const payloadUrls = this.extractPayloadUrls(text, pOrigin);
+            for (const extractedUrl of payloadUrls) {
+                if (extractedUrl.includes('/.well-known/')) {
+                    // recursively probe nested endpoints
+                    const nextOrigin = new URL(extractedUrl).origin;
+                    await this.probeEndpoint(extractedUrl, nextOrigin);
+                } else if (!db.isUrlVisited(extractedUrl)) {
+                    // queue standard web pages for regular crawling
+                    db.addUrlToQueue(extractedUrl);
+                }
+            }
+
+        } catch (error) {
+            // ignore failed requests
+            if (response?.body && !response.bodyUsed) {
+                await response.body.cancel().catch(() => { });
+            }
+        }
+    }
+
+
+
+
+
+
+    
+
     // fetch well-known endpoints for an origin
     async checkWellKnownEndpoints(pOrigin) {
-
         for (const endpoint of CONFIG.crawler.wellKnownEndpoints) {
             const url = `${pOrigin}${endpoint}`;
-
-            // check if already visited
-            if (db.isUrlVisited(url)) continue;
-            db.addVisitedUrl(url);
-
-            try {
-                // rate limits
-                await this.enforceRateLimit(pOrigin);
-
-                // fetch url
-                const options = {
-                    headers: { 'User-Agent': CONFIG.crawler.crawlerName },
-                    signal: AbortSignal.timeout(10000)
-                };
-                const response = await fetch(url, options);
-
-                if (!response.ok) {
-                    await response.body?.cancel();
-                    continue;
-                }
-
-                // check if redirected away from the exact endpoint
-                const finalUrlObj = new URL(response.url);
-                if (finalUrlObj.pathname !== endpoint) {
-                    await response.body?.cancel();
-                    continue;
-                }
-
-                // reject html responses (soft 404s or spa fallbacks)
-                const contentType = response.headers.get('content-type') || '';
-                if (contentType.includes('text/html')) {
-                    await response.body?.cancel();
-                    continue;
-                }
-
-                const text = await response.text();
-                if (!text.trim() || text.trim().startsWith('<')) continue;
-
-
-                // validate json structure
-                if (endpoint.endsWith('.json')) {
-                    try {
-                        const parsed = JSON.parse(text);
-                        if (typeof parsed !== 'object' || parsed === null) continue;
-                    } catch {
-                        continue;
-                    }
-                }
-
-
-                console.log(`Found well-known endpoint: ${url}`);
-                db.addWellKnownUrl(url);
-
-
-                // discover nested .well-known paths inside the payload
-                const nestedUrls = this.extractWellKnownUrls(text, pOrigin);
-                for (const nestedUrl of nestedUrls) {
-                    if (!db.isUrlVisited(nestedUrl)) {
-                        db.addVisitedUrl(nestedUrl);
-                        db.addWellKnownUrl(nestedUrl);
-                        console.log(`Found nested endpoint: ${nestedUrl}`);
-                    }
-                }
-                
-            } catch (error) {
-                // ignore failed requests
-            }
+            await this.probeEndpoint(url, pOrigin);
         }
     }
 
@@ -302,9 +334,8 @@ class Crawler {
                 for (const link of links) {
                     if (link.includes('/.well-known/')) {
                         if (!db.isUrlVisited(link)) {
-                            db.addVisitedUrl(link);
-                            db.addWellKnownUrl(link);
-                            console.log(`Found well-known endpoint from link: ${link}`);
+                            const linkOrigin = new URL(link).origin;
+                            await this.probeEndpoint(link, linkOrigin);
                         }
                     } else if (!db.isUrlVisited(link)) {
                         db.addUrlToQueue(link);
