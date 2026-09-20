@@ -40,9 +40,8 @@ class Crawler {
 
     
     // check page language
-    checkLanguage(pHtml) {
-        const $ = cheerio.load(pHtml);
-        const langAttr = $('html').attr('lang');
+    checkLanguage(pLoadedPage) {
+        const langAttr = pLoadedPage('html').attr('lang');
         if (!langAttr) return false;
 
         const lang = langAttr.split('-')[0].toLowerCase();
@@ -54,12 +53,11 @@ class Crawler {
 
 
     // extract absolute and relative links
-    extractLinks(pHtml, pBaseUrl) {
+    extractLinks(pLoadedPage, pBaseUrl) {
         const links = new Set();
-        const $ = cheerio.load(pHtml);
         
-        $('a').each((i, el) => {
-            const node = $(el);
+        pLoadedPage('a').each((i, el) => {
+            const node = pLoadedPage(el);
             const href = node.attr('href');
             if (!href) return;
 
@@ -247,14 +245,15 @@ class Crawler {
 
 
                 if (!isHtml) continue;
-                
 
+                const loadedPage = cheerio.load(html);
+                
                 // enforce language check
-                if (!this.checkLanguage(html)) continue;
+                if (!this.checkLanguage(loadedPage)) continue;
                 
 
                 // pass finalUrl as base to correctly resolve relative links
-                const links = this.extractLinks(html, finalUrl);
+                const links = this.extractLinks(loadedPage, finalUrl);
                 for (const link of links) {
                     if (!db.isUrlVisited(link)) {
                         db.addUrlToQueue(link);
