@@ -29,7 +29,7 @@ async function exportData() {
 
             // fetch url
             const options = {
-                headers: { 'Api-User-Agent': CONFIG.crawler.crawlerName },
+                headers: { 'User-Agent': CONFIG.crawler.crawlerName },
                 signal: AbortSignal.timeout(10000)
             };
             const response = await fetch(row.url, options);
