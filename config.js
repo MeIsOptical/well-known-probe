@@ -3,18 +3,18 @@
 const CONFIG = {
 
     execution: {
-        concurrentCrawlers: 10,
+        concurrentCrawlers: 20,
         seeds: [
             'https://news.ycombinator.com/',
             'https://developer.mozilla.org/en-US/',
-            'https://en.wikipedia.org/wiki/Main_Page'
+            //'https://en.wikipedia.org/wiki/Main_Page'
         ]
     },
 
     crawler: {
         crawlerName: 'Well-Known-Probe/1.0',
         allowedLanguages: ['en'],
-        rateLimitMs: 800,
+        rateLimitMs: 700,
         wellKnownEndpoints: [
             '/.well-known/llms.txt',
             '/.well-known/agent-manifest.json',

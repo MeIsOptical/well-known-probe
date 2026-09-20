@@ -54,7 +54,7 @@ class Crawler {
 
     // extract absolute and relative links
     extractLinks(pLoadedPage, pBaseUrl) {
-        const links = new Set();
+        const found = new Set();
         
         pLoadedPage('a').each((i, el) => {
             const node = pLoadedPage(el);
@@ -79,14 +79,50 @@ class Crawler {
                 const url = urlObj.href;
                 
                 if (url.startsWith('https://')) {
-                    links.add(url);
+                    found.add(url);
                 }
             } catch (e) {
                 // ignore invalid urls
             }
         });
         
-        return Array.from(links);
+        return Array.from(found);
+    }
+
+
+
+
+
+
+
+
+    // extract any well-known urls from text or json content
+    extractWellKnownUrls(pText, pBaseUrl) {
+        const found = new Set();
+
+        // absolute urls
+        const absoluteMatches = pText.match(/https?:\/\/[^\s"'<>\)\],}]+/g) || [];
+        for (const url of absoluteMatches) {
+            if (url.includes('/.well-known/')) {
+                try {
+                    const parsed = new URL(url);
+                    parsed.hash = '';
+                    found.add(parsed.href);
+                } catch { }
+            }
+        }
+
+        // relative paths
+        const relativeMatches = pText.match(/\/\.well-known\/[^\s"'<>\)\],}]+/g) || [];
+        for (const relPath of relativeMatches) {
+            try {
+                const resolved = new URL(relPath, pBaseUrl);
+                resolved.hash = '';
+                found.add(resolved.href);
+            } catch { }
+        }
+
+        return Array.from(found);
     }
 
 
@@ -139,7 +175,8 @@ class Crawler {
                 }
 
                 const text = await response.text();
-                if (!text.trim()) continue;
+                if (!text.trim() || text.trim().startsWith('<')) continue;
+
 
                 // validate json structure
                 if (endpoint.endsWith('.json')) {
@@ -151,13 +188,21 @@ class Crawler {
                     }
                 }
 
-                // validate text structure
-                if (endpoint.endsWith('.txt')) {
-                    if (text.trim().startsWith('<')) continue;
-                }
 
                 console.log(`Found well-known endpoint: ${url}`);
                 db.addWellKnownUrl(url);
+
+
+                // discover nested .well-known paths inside the payload
+                const nestedUrls = this.extractWellKnownUrls(text, pOrigin);
+                for (const nestedUrl of nestedUrls) {
+                    if (!db.isUrlVisited(nestedUrl)) {
+                        db.addVisitedUrl(nestedUrl);
+                        db.addWellKnownUrl(nestedUrl);
+                        console.log(`Found nested endpoint: ${nestedUrl}`);
+                    }
+                }
+                
             } catch (error) {
                 // ignore failed requests
             }
@@ -252,14 +297,22 @@ class Crawler {
                 if (!this.checkLanguage(loadedPage)) continue;
                 
 
-                // pass finalUrl as base to correctly resolve relative links
+                // extract links
                 const links = this.extractLinks(loadedPage, finalUrl);
                 for (const link of links) {
-                    if (!db.isUrlVisited(link)) {
+                    if (link.includes('/.well-known/')) {
+                        if (!db.isUrlVisited(link)) {
+                            db.addVisitedUrl(link);
+                            db.addWellKnownUrl(link);
+                            console.log(`Found well-known endpoint from link: ${link}`);
+                        }
+                    } else if (!db.isUrlVisited(link)) {
                         db.addUrlToQueue(link);
                     }
                 }
-            } catch (error) {
+
+            }
+            catch (error) {
                 // ignore failed requests
                 if (response?.body && !response.bodyUsed) {
                     await response.body.cancel().catch(() => { });
