@@ -30,7 +30,7 @@ const { searchFor, getDataset } = require('well-known-probe');
 
 async function run() {
     // Search top matches
-    const results = await searchFor('mcp', 5);
+    const results = await searchFor('mcp');
     console.log(results);
 
     // Or load the full dataset directly
