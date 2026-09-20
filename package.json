@@ -1,7 +1,7 @@
 {
   "name": "well-known-probe",
   "version": "1.0.0",
-  "description": "Search engine for AI agent manifests and endpoints.",
+  "description": "A search engine for AI agent manifests and endpoints.",
   "main": "npm.js",
   "files": [
     "npm.js"
