@@ -1,5 +1,6 @@
 # Database
 urls.db
+urls_backup.db
 urls.db-shm
 urls.db-wal
 
