@@ -9,6 +9,7 @@ const CONFIG = {
             'https://www.electronjs.org/',
             'https://vercel.com/',
             'https://lobste.rs/',
+            'https://github.com/trending',
             'https://ollama.com/',
             'https://huggingface.co/',
             'https://js.langchain.com/',
