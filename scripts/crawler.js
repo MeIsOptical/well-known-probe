@@ -73,8 +73,9 @@ class Crawler {
             try {
                 const urlObj = new URL(href, pBaseUrl);
                 
-                // remove hash fragments to prevent duplicate page fetches
+                // remove hash fragments and query params
                 urlObj.hash = '';
+                urlObj.search = '';
                 
                 const url = urlObj.href;
                 
