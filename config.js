@@ -5,9 +5,18 @@ const CONFIG = {
     execution: {
         concurrentCrawlers: 20,
         seeds: [
+            'https://nodejs.org/en',
+            'https://www.electronjs.org/',
+            'https://vercel.com/',
+            'https://lobste.rs/',
+            'https://ollama.com/',
+            'https://huggingface.co/',
+            'https://js.langchain.com/',
             'https://news.ycombinator.com/',
             'https://developer.mozilla.org/en-US/',
-            //'https://en.wikipedia.org/wiki/Main_Page'
+            'https://simonwillison.net/',
+            'https://dev.to/',
+            'https://hashnode.com/'
         ]
     },
 

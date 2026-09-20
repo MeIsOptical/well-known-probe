@@ -42,7 +42,7 @@ process.on('uncaughtException', (err) => {
 
 // add seeds to queue
 for (const seed of CONFIG.execution.seeds) {
-    db.addUrlToQueue(seed);
+    db.addSeed(seed);
 }
 
 // spawn multiple crawlers

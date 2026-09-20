@@ -60,6 +60,17 @@ class Database {
 
 
 
+    // #region SEEDS
+
+    addSeed(pUrl) {
+        this.removeVisitedUrl(pUrl);
+        return this.addUrlToQueue(pUrl);
+    }
+
+    // #endregion
+
+
+
 
     // #region VISITED URLS
 
