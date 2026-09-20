@@ -14,8 +14,35 @@ This repository catalogs endpoints that define autonomous agent capabilities, sp
 <br>
 
 ## Usage
-We are currently writing an npm package that will use this dataset to search for endpoints, more on that soon!
 
+### NPM Package
+
+Install via npm:
+
+```bash
+npm install well-known-probe
+```
+
+
+Search or fetch endpoints:
+```javascript
+const { searchFor, getDataset } = require('well-known-probe');
+
+async function run() {
+    // Search top matches
+    const results = await searchFor('mcp', 5);
+    console.log(results);
+
+    // Or load the full dataset directly
+    const dataset = await getDataset();
+}
+
+run();
+```
+
+<br>
+
+### Raw Dataset
 If you want, you can also just fetch the latest version of the dataset for your own projects at `https://raw.githubusercontent.com/MeIsOptical/well-known-probe/main/data/endpoints.json`. This JSON file contains an array of objects, each representing a discovered endpoint.
 
 <br>
