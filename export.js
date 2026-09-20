@@ -61,6 +61,13 @@ async function exportData() {
                 continue;
             }
 
+            // validate text structure
+            if (content.trim().startsWith('<')) {
+                console.log(`Failed: HTML content recognized in file`);
+                continue;
+            }
+            
+
             // validate json structure
             if (row.url.endsWith('.json')) {
                 try {
@@ -70,15 +77,7 @@ async function exportData() {
                     console.log(`Failed: JSON content failed to parse`);
                     continue;
                 }
-            }
-
-            // validate text structure
-            if (row.url.endsWith('.txt')) {
-                if (content.trim().startsWith('<')) {
-                    console.log(`Failed: HTML content recognized in TXT file`);
-                    continue;
-                }
-            }
+            }           
 
 
             
