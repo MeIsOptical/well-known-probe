@@ -812,5 +812,101 @@
             "panelUrl": null,
             "backgroundColor": "#EB5037"
         }
+    },
+    {
+        "url": "https://www.onyxroom.com/.well-known/agent-card.json",
+        "domain": "www.onyxroom.com",
+        "endpoint": "/.well-known/agent-card.json",
+        "filename": "agent-card.json",
+        "content": {
+            "name": "ONYX ROOM NIGHTCLUB",
+            "description": "Onyx Room Nightclub reigns as a cornerstone of downtown San Diego’s Gaslamp Quarter nightlife, celebrated for its raw energy, diverse musical formats, and subterranean party culture. Shifting away from standard, single-genre clubs, the brand delivers a multi-room, multi-level nightlife collective that embraces a highly inclusive, high-octane musical identity. Showcasing dedicated rooms for reggaeton, Latin hits, hip-hop, open-format, and electronic dance music, Onyx Room pairs an intimate, high-energy dance floor vibe with premium VIP bottle service hospitality, making it an elite weekend sanctuary for local industry insiders and travelers chasing the ultimate San Diego club experience.",
+            "url": "https://www.onyxroom.com/",
+            "discovery": {
+                "llms": "https://www.onyxroom.com/llms.txt",
+                "llms_full": "https://www.onyxroom.com/llms-full.txt",
+                "sitemap": "https://www.onyxroom.com/sitemap_index.xml",
+                "openapi": "https://www.onyxroom.com/openapi.json",
+                "api_catalog": "https://www.onyxroom.com/.well-known/api-catalog",
+                "dns_aid": "https://www.onyxroom.com/.well-known/dns-aid.json",
+                "agent_skills": "https://www.onyxroom.com/.well-known/agent-skills/index.json",
+                "mcp_server_card": "https://www.onyxroom.com/.well-known/mcp/server-card.json"
+            }
+        }
+    },
+    {
+        "url": "https://www.onyxroom.com/.well-known/api-catalog",
+        "domain": "www.onyxroom.com",
+        "endpoint": "/.well-known/api-catalog",
+        "filename": "api-catalog",
+        "content": "{\n    \"linkset\": [\n        {\n            \"anchor\": \"https://www.onyxroom.com/wp-json/\",\n            \"service-desc\": [\n                {\n                    \"href\": \"https://www.onyxroom.com/wp-json/\",\n                    \"type\": \"application/json\",\n                    \"title\": \"WordPress REST API discovery document\"\n                },\n                {\n                    \"href\": \"https://www.onyxroom.com/openapi.json\",\n                    \"type\": \"application/vnd.oai.openapi+json;version=3.1\",\n                    \"title\": \"ONYX ROOM NIGHTCLUB AEO OpenAPI document\"\n                }\n            ],\n            \"service-doc\": [\n                {\n                    \"href\": \"https://www.onyxroom.com/\",\n                    \"type\": \"text/html\",\n                    \"title\": \"ONYX ROOM NIGHTCLUB website\"\n                }\n            ],\n            \"status\": [\n                {\n                    \"href\": \"https://www.onyxroom.com/wp-json/\",\n                    \"type\": \"application/json\",\n                    \"title\": \"WordPress REST API status\"\n                }\n            ]\n        }\n    ]\n}"
+    },
+    {
+        "url": "https://www.onyxroom.com/.well-known/dns-aid.json",
+        "domain": "www.onyxroom.com",
+        "endpoint": "/.well-known/dns-aid.json",
+        "filename": "dns-aid.json",
+        "content": {
+            "version": "1",
+            "domain": "www.onyxroom.com",
+            "updated_at": "2026-09-20T23:55:08+00:00",
+            "discovery": {
+                "agent_card": "https://www.onyxroom.com/.well-known/agent-card.json",
+                "mcp_server_card": "https://www.onyxroom.com/.well-known/mcp/server-card.json",
+                "api_catalog": "https://www.onyxroom.com/.well-known/api-catalog",
+                "openapi": "https://www.onyxroom.com/openapi.json",
+                "agent_skills": "https://www.onyxroom.com/.well-known/agent-skills/index.json",
+                "llms": "https://www.onyxroom.com/llms.txt",
+                "llms_full": "https://www.onyxroom.com/llms-full.txt"
+            }
+        }
+    },
+    {
+        "url": "https://www.onyxroom.com/.well-known/mcp/server-card.json",
+        "domain": "www.onyxroom.com",
+        "endpoint": "/.well-known/mcp/server-card.json",
+        "filename": "server-card.json",
+        "content": {
+            "schemaVersion": "1.0.0",
+            "serverInfo": {
+                "name": "ONYX ROOM NIGHTCLUB",
+                "version": "1.0.0",
+                "description": "Onyx Room Nightclub reigns as a cornerstone of downtown San Diego’s Gaslamp Quarter nightlife, celebrated for its raw energy, diverse musical formats, and subterranean party culture. Shifting away from standard, single-genre clubs, the brand delivers a multi-room, multi-level nightlife collective that embraces a highly inclusive, high-octane musical identity. Showcasing dedicated rooms for reggaeton, Latin hits, hip-hop, open-format, and electronic dance music, Onyx Room pairs an intimate, high-energy dance floor vibe with premium VIP bottle service hospitality, making it an elite weekend sanctuary for local industry insiders and travelers chasing the ultimate San Diego club experience."
+            },
+            "transport": [
+                {
+                    "type": "webmcp",
+                    "url": "https://www.onyxroom.com/"
+                }
+            ],
+            "capabilities": {
+                "tools": {}
+            }
+        }
+    },
+    {
+        "url": "https://www.onyxroom.com/.well-known/agent-skills/index.json",
+        "domain": "www.onyxroom.com",
+        "endpoint": "/.well-known/agent-skills/index.json",
+        "filename": "index.json",
+        "content": {
+            "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+            "skills": [
+                {
+                    "name": "site-content-discovery",
+                    "type": "skill-md",
+                    "description": "Discover public site content, llms.txt, sitemap resources, and Markdown responses.",
+                    "url": "https://www.onyxroom.com/.well-known/agent-skills/site-content-discovery/SKILL.md",
+                    "digest": "sha256-06bce26b39491e25bbd2d9fe9e33f5e906dee90b61d9c6bd12659748415b75f2"
+                }
+            ]
+        }
+    },
+    {
+        "url": "https://www.onyxroom.com/.well-known/agent-skills/site-content-discovery/SKILL.md",
+        "domain": "www.onyxroom.com",
+        "endpoint": "/.well-known/agent-skills/site-content-discovery/SKILL.md",
+        "filename": "SKILL.md",
+        "content": "---\nname: site-content-discovery\ndescription: Discover public content, llms.txt, Markdown responses, and sitemap resources for ONYX ROOM NIGHTCLUB.\n---\n\n# Site Content Discovery\n\nUse this skill when an agent needs structured public information from ONYX ROOM NIGHTCLUB.\n\n## Recommended Sources\n- Start with [https://www.onyxroom.com/llms.txt](https://www.onyxroom.com/llms.txt) when available.\n- Use [https://www.onyxroom.com/llms-full.txt](https://www.onyxroom.com/llms-full.txt) when expanded Markdown content is needed.\n- Use [https://www.onyxroom.com/sitemap_index.xml](https://www.onyxroom.com/sitemap_index.xml) to discover public pages and posts.\n- For pages and posts, request `Accept: text/markdown` to receive Markdown instead of HTML when enabled.\n\n## Site Summary\n\n"
     }
 ]
