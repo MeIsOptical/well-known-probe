@@ -61,9 +61,10 @@ async function exportData() {
                 continue;
             }
 
-            // validate text structure
-            if (content.trim().startsWith('<')) {
-                console.log(`Failed: HTML content recognized in file`);
+
+
+            if (row.url.endsWith('.txt') && content.trim().startsWith('<')) {
+                console.log(`Failed: HTML content recognized in TXT file`);
                 continue;
             }
             
